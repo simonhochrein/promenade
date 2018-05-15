@@ -1,6 +1,4 @@
-# Promenade
-
-<div style="text-align:center"><img src="assets/Promenade.svg" /></div>
+<div style="text-align:center"><img src="assets/Promenade.svg" style="max-width: 400px" /></div>
 
 ## Install
 Install using yarn
