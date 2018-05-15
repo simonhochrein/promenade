@@ -9,7 +9,9 @@
     "typescript": "^2.8.3"
   },
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "watch": "tsc -w",
+    "doc": "typedoc --out docs --module commonjs --mode file"
   },
   "dependencies": {
     "@types/glob": "^5.0.35",

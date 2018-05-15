@@ -23,7 +23,6 @@ tsconfig.json
     "compilerOptions": {
         "outDir": "./dist",
         "target": "es5",
-        "watch": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "lib": [
@@ -61,5 +60,4 @@ $ cd dist
 $ node server.js
 ```
 
-## Documentation
-Coming Soon
+## [Documentation](https://simonhochrein.github.io/promenade)

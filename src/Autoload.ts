@@ -5,8 +5,10 @@ import * as glob from 'glob';
 /**
  * Autoloads files with specified glob from rootPath
  * 
- * Example:
+ * ### Example:
+ * ```typescript
  * autoload(__dirname, "routes/*.ts");
+ * ```
  *
  * @param {string} rootPath
  * @param {string[]} paths 

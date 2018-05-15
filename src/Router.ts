@@ -14,7 +14,7 @@ let baseRoutes: { [name: string]: any } = {
 /**
  * Handles POST request with specified url
  * 
- * Example:
+ * ### Example:
  * 
  * ```typescript
  * @Post("/test")
@@ -37,7 +37,7 @@ function Post(url: string | RegExp): Function {
 /**
  * Handles GET request with specified url
  * 
- * Example:
+ * ### Example:
  * 
  * ```typescript
  * @Get("/test")
@@ -59,7 +59,7 @@ function Get(url: string | RegExp): any {
 /**
  * Handles DELETE request with specified url
  * 
- * Example:
+ * ### Example:
  * 
  * ```typescript
  * @Delete("/test")
@@ -81,7 +81,7 @@ function Delete(url: string | RegExp): any {
 /**
  * Handles PUT request with specified url
  * 
- * Example:
+ * ### Example:
  * 
  * ```typescript
  * @Put("/test")

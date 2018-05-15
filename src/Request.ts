@@ -6,7 +6,7 @@ export default class Request {
     /**
      * Returns query parameters of current route
      * 
-     * Example:
+     * ### Example:
      * ```typescript
      * console.log(Request.Query.search)
      * ```
@@ -20,7 +20,7 @@ export default class Request {
     /**
      * Returns body of current route
      * 
-     * Example:
+     * ### Example:
      * ```typescript
      * console.log(Request.Body.name)
      * ```
@@ -34,7 +34,7 @@ export default class Request {
     /**
      * Returns files of current route
      * 
-     * Example:
+     * ### Example:
      * ```typescript
      * console.log(Request.Files[0].FileName)
      * ```
@@ -47,7 +47,7 @@ export default class Request {
     /**
      * Returns URL of current route
      * 
-     * Example:
+     * ### Example:
      * ```typescript
      * console.log(Request.Url)
      * ```
@@ -60,7 +60,7 @@ export default class Request {
     /**
      * Returns raw body of current route
      * 
-     * Example:
+     * ### Example:
      * ```typescript
      * console.log(Request.RawBody)
      * ```

@@ -100,14 +100,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/simonhochrein/promenade/blob/532306f/src/Router.ts#L74">Router.ts:74</a></li>
+									<li>Defined in <a href="https://github.com/simonhochrein/promenade/blob/9298fd4/src/Router.ts#L74">Router.ts:74</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
 									<p>Handles DELETE request with specified url</p>
 								</div>
-								<p>Example:</p>
+								<h3 id="example-">Example:</h3>
 								<pre><code class="lang-typescript"><span class="hljs-meta">@Delete</span>(<span class="hljs-string">"/test"</span>)
 test() {
  Response.Send(<span class="hljs-string">"test"</span>);
@@ -134,14 +134,14 @@ test() {
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/simonhochrein/promenade/blob/532306f/src/Router.ts#L52">Router.ts:52</a></li>
+									<li>Defined in <a href="https://github.com/simonhochrein/promenade/blob/9298fd4/src/Router.ts#L52">Router.ts:52</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
 									<p>Handles GET request with specified url</p>
 								</div>
-								<p>Example:</p>
+								<h3 id="example-">Example:</h3>
 								<pre><code class="lang-typescript"><span class="hljs-meta">@Get</span>(<span class="hljs-string">"/test"</span>)
 test() {
  Response.Send(<span class="hljs-string">"test"</span>);
@@ -168,14 +168,14 @@ test() {
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/simonhochrein/promenade/blob/532306f/src/Router.ts#L29">Router.ts:29</a></li>
+									<li>Defined in <a href="https://github.com/simonhochrein/promenade/blob/9298fd4/src/Router.ts#L29">Router.ts:29</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
 									<p>Handles POST request with specified url</p>
 								</div>
-								<p>Example:</p>
+								<h3 id="example-">Example:</h3>
 								<pre><code class="lang-typescript"><span class="hljs-meta">@Post</span>(<span class="hljs-string">"/test"</span>)
 test() {
  Response.Send(<span class="hljs-string">"test"</span>);
@@ -202,14 +202,14 @@ test() {
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/simonhochrein/promenade/blob/532306f/src/Router.ts#L96">Router.ts:96</a></li>
+									<li>Defined in <a href="https://github.com/simonhochrein/promenade/blob/9298fd4/src/Router.ts#L96">Router.ts:96</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
 									<p>Handles PUT request with specified url</p>
 								</div>
-								<p>Example:</p>
+								<h3 id="example-">Example:</h3>
 								<pre><code class="lang-typescript"><span class="hljs-meta">@Put</span>(<span class="hljs-string">"/test"</span>)
 test() {
  Response.Send(<span class="hljs-string">"test"</span>);
@@ -236,14 +236,14 @@ test() {
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/simonhochrein/promenade/blob/532306f/src/Server.ts#L22">Server.ts:22</a></li>
+									<li>Defined in <a href="https://github.com/simonhochrein/promenade/blob/9298fd4/src/Server.ts#L22">Server.ts:22</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
 									<p>Handles Routes from Node.JS HTTPServer instance</p>
 								</div>
-								<h2 id="example-">Example:</h2>
+								<h3 id="example-">Example:</h3>
 								<pre><code class="lang-typescript"><span class="hljs-keyword">import</span> * <span class="hljs-keyword">as</span> http <span class="hljs-keyword">from</span> <span class="hljs-string">'http'</span>;
 <span class="hljs-keyword">import</span> <span class="hljs-string">"promenade/auto"</span>;
 
@@ -265,15 +265,16 @@ http.createServer(Server()).listen(<span class="hljs-number">8888</span>);
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/simonhochrein/promenade/blob/532306f/src/Autoload.ts#L14">Autoload.ts:14</a></li>
+									<li>Defined in <a href="https://github.com/simonhochrein/promenade/blob/9298fd4/src/Autoload.ts#L16">Autoload.ts:16</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
 									<p>Autoloads files with specified glob from rootPath</p>
 								</div>
-								<p>Example:
-								autoload(__dirname, &quot;routes/*.ts&quot;);</p>
+								<h3 id="example-">Example:</h3>
+								<pre><code class="lang-typescript">autoload(__dirname, <span class="hljs-string">"routes/*.ts"</span>);
+</code></pre>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
