@@ -3,7 +3,7 @@
 ## Install
 Install using yarn
 ```bash
-$ yarn https://github.com/simonhochrein/promenade
+$ yarn add https://github.com/simonhochrein/promenade
 ```
 Or npm
 ```bash
