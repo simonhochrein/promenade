@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "outDir": "./dist",
+        "target": "es5",
+        "watch": true,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "lib": [
+            "es6"
+        ],
+        "noImplicitUseStrict": true
+    },
+    "include": [
+        "src/*.ts"
+    ],
+    "exclude": [
+        "test"
+    ]
+}

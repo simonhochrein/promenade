@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "rootDirs": [
+            ".",
+            "../src"
+        ],
+        "outDir": "dist",
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "lib": [
+            "es6"
+        ],
+        "noImplicitUseStrict": true
+    }
+}
