@@ -4,7 +4,22 @@ import * as querystring from 'querystring';
 import { ServerRequest, ServerResponse } from "http";
 import BodyParser from './BodyParser';
 
-export default function Server() {
+
+/**
+ * Handles Routes from Node.JS HTTPServer instance
+ * 
+ * ## Example:
+ * 
+ * ```typescript
+ * import * as http from 'http';
+ * import "promenade/auto";
+ * 
+ * http.createServer(Server()).listen(8888);
+ * ```
+ *
+ * @returns Function
+ */
+export default function Server(): Function {
     return function (req: ServerRequest, res: ServerResponse) {
         var url = parse(req.url);
         var pathname = url.pathname;

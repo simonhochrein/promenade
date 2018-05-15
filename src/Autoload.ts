@@ -2,10 +2,19 @@ import { readdirSync } from "fs";
 import { join } from "path";
 import * as glob from 'glob';
 
-export function autoload(root, ...paths) {
+/**
+ * Autoloads files with specified glob from rootPath
+ * 
+ * Example:
+ * autoload(__dirname, "routes/*.ts");
+ *
+ * @param {string} rootPath
+ * @param {string[]} paths 
+ */
+export function autoload(rootPath: string, ...paths: string[]) {
     paths.forEach((path) => {
-        glob.sync(path, { cwd: root }).forEach(file => {
-            require(join(root, file));
+        glob.sync(path, { cwd: rootPath }).forEach(file => {
+            require(join(rootPath, file));
         });
     })
 }

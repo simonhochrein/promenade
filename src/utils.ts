@@ -1,6 +1,8 @@
 import { ServerResponse, ServerRequest } from "http";
 import { File } from './File';
-
+/**
+ * @hidden
+ */
 interface Wrapper {
     res: ServerResponse;
     req: ServerRequest;
@@ -9,6 +11,9 @@ interface Wrapper {
     body: { [name: string]: any };
     rawBody: string;
 }
+/**
+ * @hidden
+ */
 export function getParent(): Function & Wrapper {
     var caller = getParent.caller as any;
     while (caller && caller.name != "__wrapper") {

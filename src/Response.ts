@@ -1,7 +1,7 @@
 import { getParent } from "./utils";
 
-export default class ResponseClass {
-    Send(value: any) {
+export default class Response {
+    static Send(value: any) {
         let parent;
         if (parent = getParent()) {
             if (typeof value == "object") {
@@ -15,7 +15,7 @@ export default class ResponseClass {
             throw new Error("Can't call Response.Write outside of a route");
         }
     }
-    Header(key: string, value: string) {
+    static Header(key: string, value: string) {
         let parent = getParent();
         if (parent) {
             parent.res.setHeader(key, value);
@@ -23,7 +23,7 @@ export default class ResponseClass {
             throw new Error("Can't call Response.Write outside of a route");
         }
     }
-    Status(status: number) {
+    static Status(status: number) {
         let parent = getParent();
         if (parent) {
             parent.res.statusCode = status;

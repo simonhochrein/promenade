@@ -1,6 +1,8 @@
 import { parse } from "querystring";
 import { File } from "./File";
-
+/**
+ * @hidden
+ */
 function parseLines(lines) {
     var section = -1;
     var file: File = {
@@ -57,8 +59,10 @@ function parseLines(lines) {
     }
     return { FileBody: file, FieldBody: field, IsFile: isFile };
 }
-
-export default function BodyParser(type, body) {
+/**
+ * @hidden
+ */
+export default function BodyParser(type: string, body: string) {
     var parts = type.split(";");
     var type = parts[0];
     var Files = [];

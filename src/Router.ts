@@ -1,14 +1,32 @@
 import { ServerRequest } from "http";
-
+/**
+ * @hidden
+ */
 let routes = [
 
 ];
-
+/**
+ * @hidden
+ */
 let baseRoutes: { [name: string]: any } = {
 
 };
-
-function Post(url: string | RegExp): any {
+/**
+ * Handles POST request with specified url
+ * 
+ * Example:
+ * 
+ * ```typescript
+ * @Post("/test")
+ * test() {
+ *  Response.Send("test");
+ * }
+ * ```
+ * 
+ * @param {(string | RegExp)} url 
+ * @returns {Function} 
+ */
+function Post(url: string | RegExp): Function {
     return function (target: Object,
         propertyKey: string,
         descriptor: TypedPropertyDescriptor<any>) {
@@ -16,6 +34,21 @@ function Post(url: string | RegExp): any {
     }
 }
 
+/**
+ * Handles GET request with specified url
+ * 
+ * Example:
+ * 
+ * ```typescript
+ * @Get("/test")
+ * test() {
+ *  Response.Send("test");
+ * }
+ * ```
+ * 
+ * @param {(string | RegExp)} url 
+ * @returns {Function} 
+ */
 function Get(url: string | RegExp): any {
     return function (target: Object,
         propertyKey: string,
@@ -23,7 +56,21 @@ function Get(url: string | RegExp): any {
         routes.push({ url, type: "GET", handler: target[propertyKey], ClassName: target.constructor.name });
     }
 }
-
+/**
+ * Handles DELETE request with specified url
+ * 
+ * Example:
+ * 
+ * ```typescript
+ * @Delete("/test")
+ * test() {
+ *  Response.Send("test");
+ * }
+ * ```
+ * 
+ * @param {(string | RegExp)} url 
+ * @returns {Function} 
+ */
 function Delete(url: string | RegExp): any {
     return function (target: Object,
         propertyKey: string,
@@ -31,7 +78,21 @@ function Delete(url: string | RegExp): any {
         routes.push({ url, type: "DELETE", handler: target[propertyKey], ClassName: target.constructor.name });
     }
 }
-
+/**
+ * Handles PUT request with specified url
+ * 
+ * Example:
+ * 
+ * ```typescript
+ * @Put("/test")
+ * test() {
+ *  Response.Send("test");
+ * }
+ * ```
+ * 
+ * @param {(string | RegExp)} url 
+ * @returns {Function} 
+ */
 function Put(url: string | RegExp): any {
     return function (target: Object,
         propertyKey: string,
@@ -39,7 +100,9 @@ function Put(url: string | RegExp): any {
         routes.push({ url, type: "PUT", handler: target[propertyKey], ClassName: target.constructor.name });
     }
 }
-
+/**
+ * @hidden
+ */
 function Router(basePath?: string) {
     return function (constructor) {
         var router = new constructor();
@@ -48,7 +111,9 @@ function Router(basePath?: string) {
         }
     }
 }
-
+/**
+ * @hidden
+ */
 export class Routes {
     static match(a: string | RegExp, b: string): { UrlParameters: string[], found: boolean } {
         if (a instanceof RegExp) {
