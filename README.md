@@ -62,4 +62,4 @@ $ node server.js
 ```
 
 ## Documentation
-Comming Soon
+Coming Soon
