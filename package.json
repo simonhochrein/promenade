@@ -11,7 +11,7 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
-    "doc": "typedoc --out docs --module commonjs --mode file"
+    "doc": "typedoc --out docs --module commonjs --mode file --includes assets"
   },
   "dependencies": {
     "@types/glob": "^5.0.35",
