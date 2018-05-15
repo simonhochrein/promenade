@@ -1,4 +1,5 @@
-<div style="text-align:center"><img src="assets/Promenade.png"/></div>
+<div style="text-align:center"><img src="assets/Promenade.svg"/></div>
+
 ## Install
 Install using yarn
 ```bash
