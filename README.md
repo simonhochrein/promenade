@@ -1,4 +1,4 @@
-<div style="text-align:center"><img src="assets/Promenade.svg"/></div>
+<div style="text-align:center"><img src="https://github.com/simonhochrein/promenade/raw/master/assets/Promenade.svg"/></div>
 
 ## Install
 Install using yarn
