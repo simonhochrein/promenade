@@ -95,13 +95,13 @@
 					<a name="delete" class="tsd-anchor"></a>
 					<h3>Delete</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-is-not-exported">
-						<li class="tsd-signature tsd-kind-icon">Delete<span class="tsd-signature-symbol">(</span>url<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">RegExp</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+						<li class="tsd-signature tsd-kind-icon">Delete<span class="tsd-signature-symbol">(</span>url<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">RegExp</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Decorator</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/simonhochrein/promenade/blob/2973c6a/src/Router.ts#L81">Router.ts:81</a></li>
+									<li>Defined in <a href="https://github.com/simonhochrein/promenade/blob/ecfc194/src/Router.ts#L88">Router.ts:88</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -114,6 +114,10 @@ test() {
  Response.Send(<span class="hljs-string">"test"</span>);
 }
 </code></pre>
+								<dl class="tsd-comment-tags">
+									<dt>decorator</dt>
+									<dd></dd>
+								</dl>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
@@ -121,7 +125,7 @@ test() {
 									<h5>url: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">RegExp</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Decorator</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -129,22 +133,42 @@ test() {
 					<a name="errorhandler" class="tsd-anchor"></a>
 					<h3>Error<wbr>Handler</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-is-not-exported">
-						<li class="tsd-signature tsd-kind-icon">Error<wbr>Handler<span class="tsd-signature-symbol">(</span>error<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">(Anonymous function)</span></li>
+						<li class="tsd-signature tsd-kind-icon">Error<wbr>Handler<span class="tsd-signature-symbol">(</span>error<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Decorator</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/simonhochrein/promenade/blob/2973c6a/src/Router.ts#L111">Router.ts:111</a></li>
+									<li>Defined in <a href="https://github.com/simonhochrein/promenade/blob/ecfc194/src/Router.ts#L137">Router.ts:137</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Handles errors thrown in routes</p>
+								</div>
+								<h3 id="example-">Example:</h3>
+								<pre><code class="lang-typescript"><span class="hljs-meta">@ErrorHandler</span>(<span class="hljs-number">404</span>)
+Handle404() {
+ Response.Send(<span class="hljs-string">"404"</span>)
+}
+
+<span class="hljs-meta">@ErrorHandler</span>(ServiceError)
+HandleServiceError(e: ServiceError) {
+ Response.Send(e.message)
+}
+</code></pre>
+								<dl class="tsd-comment-tags">
+									<dt>decorator</dt>
+									<dd></dd>
+								</dl>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> error: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">object</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">(Anonymous function)</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Decorator</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -152,13 +176,13 @@ test() {
 					<a name="get" class="tsd-anchor"></a>
 					<h3>Get</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-is-not-exported">
-						<li class="tsd-signature tsd-kind-icon">Get<span class="tsd-signature-symbol">(</span>url<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">RegExp</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+						<li class="tsd-signature tsd-kind-icon">Get<span class="tsd-signature-symbol">(</span>url<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">RegExp</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Decorator</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/simonhochrein/promenade/blob/2973c6a/src/Router.ts#L59">Router.ts:59</a></li>
+									<li>Defined in <a href="https://github.com/simonhochrein/promenade/blob/ecfc194/src/Router.ts#L66">Router.ts:66</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -171,6 +195,10 @@ test() {
  Response.Send(<span class="hljs-string">"test"</span>);
 }
 </code></pre>
+								<dl class="tsd-comment-tags">
+									<dt>decorator</dt>
+									<dd></dd>
+								</dl>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
@@ -178,7 +206,7 @@ test() {
 									<h5>url: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">RegExp</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Decorator</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -186,13 +214,13 @@ test() {
 					<a name="post" class="tsd-anchor"></a>
 					<h3>Post</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-is-not-exported">
-						<li class="tsd-signature tsd-kind-icon">Post<span class="tsd-signature-symbol">(</span>url<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">RegExp</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Function</span></li>
+						<li class="tsd-signature tsd-kind-icon">Post<span class="tsd-signature-symbol">(</span>url<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">RegExp</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Decorator</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/simonhochrein/promenade/blob/2973c6a/src/Router.ts#L36">Router.ts:36</a></li>
+									<li>Defined in <a href="https://github.com/simonhochrein/promenade/blob/ecfc194/src/Router.ts#L43">Router.ts:43</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -205,6 +233,10 @@ test() {
  Response.Send(<span class="hljs-string">"test"</span>);
 }
 </code></pre>
+								<dl class="tsd-comment-tags">
+									<dt>decorator</dt>
+									<dd></dd>
+								</dl>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
@@ -212,7 +244,7 @@ test() {
 									<h5>url: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">RegExp</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Function</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Decorator</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -220,13 +252,13 @@ test() {
 					<a name="put" class="tsd-anchor"></a>
 					<h3>Put</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-is-not-exported">
-						<li class="tsd-signature tsd-kind-icon">Put<span class="tsd-signature-symbol">(</span>url<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">RegExp</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+						<li class="tsd-signature tsd-kind-icon">Put<span class="tsd-signature-symbol">(</span>url<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">RegExp</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Decorator</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/simonhochrein/promenade/blob/2973c6a/src/Router.ts#L103">Router.ts:103</a></li>
+									<li>Defined in <a href="https://github.com/simonhochrein/promenade/blob/ecfc194/src/Router.ts#L110">Router.ts:110</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -239,6 +271,10 @@ test() {
  Response.Send(<span class="hljs-string">"test"</span>);
 }
 </code></pre>
+								<dl class="tsd-comment-tags">
+									<dt>decorator</dt>
+									<dd></dd>
+								</dl>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
@@ -246,7 +282,7 @@ test() {
 									<h5>url: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">RegExp</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Decorator</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -260,7 +296,7 @@ test() {
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/simonhochrein/promenade/blob/2973c6a/src/Server.ts#L22">Server.ts:22</a></li>
+									<li>Defined in <a href="https://github.com/simonhochrein/promenade/blob/ecfc194/src/Server.ts#L22">Server.ts:22</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -310,7 +346,7 @@ http.createServer(Server()).listen(<span class="hljs-number">8888</span>);
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/simonhochrein/promenade/blob/2973c6a/src/Autoload.ts#L16">Autoload.ts:16</a></li>
+									<li>Defined in <a href="https://github.com/simonhochrein/promenade/blob/ecfc194/src/Autoload.ts#L16">Autoload.ts:16</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">

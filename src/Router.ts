@@ -3,6 +3,13 @@ import { inspect } from "util";
 /**
  * @hidden
  */
+type Decorator = (target: Object,
+    propertyKey: string,
+    descriptor: TypedPropertyDescriptor<any>) => void;
+
+/**
+ * @hidden
+ */
 let routes = [
 
 ];
@@ -29,11 +36,11 @@ let errorHandlers: { errorType: boolean | number | (new (...args) => Error), han
  *  Response.Send("test");
  * }
  * ```
- * 
+ * @decorator
  * @param {(string | RegExp)} url 
- * @returns {Function} 
+ * @returns {Decorator} 
  */
-function Post(url: string | RegExp): Function {
+function Post(url: string | RegExp): Decorator {
     return function (target: Object,
         propertyKey: string,
         descriptor: TypedPropertyDescriptor<any>) {
@@ -52,11 +59,11 @@ function Post(url: string | RegExp): Function {
  *  Response.Send("test");
  * }
  * ```
- * 
+ * @decorator
  * @param {(string | RegExp)} url 
- * @returns {Function} 
+ * @returns {Decorator} 
  */
-function Get(url: string | RegExp): any {
+function Get(url: string | RegExp): Decorator {
     return function (target: Object,
         propertyKey: string,
         descriptor: TypedPropertyDescriptor<any>) {
@@ -74,11 +81,11 @@ function Get(url: string | RegExp): any {
  *  Response.Send("test");
  * }
  * ```
- * 
+ * @decorator
  * @param {(string | RegExp)} url 
- * @returns {Function} 
+ * @returns {Decorator} 
  */
-function Delete(url: string | RegExp): any {
+function Delete(url: string | RegExp): Decorator {
     return function (target: Object,
         propertyKey: string,
         descriptor: TypedPropertyDescriptor<any>) {
@@ -96,11 +103,11 @@ function Delete(url: string | RegExp): any {
  *  Response.Send("test");
  * }
  * ```
- * 
+ * @decorator
  * @param {(string | RegExp)} url 
- * @returns {Function} 
+ * @returns {Decorator} 
  */
-function Put(url: string | RegExp): any {
+function Put(url: string | RegExp): Decorator {
     return function (target: Object,
         propertyKey: string,
         descriptor: TypedPropertyDescriptor<any>) {
@@ -108,7 +115,26 @@ function Put(url: string | RegExp): any {
     }
 }
 
-function ErrorHandler(error?: number | (new (...args) => Error)) {
+/**
+ * Handles errors thrown in routes
+ * 
+ * ### Example:
+ * ```typescript
+ * @ErrorHandler(404)
+ * Handle404() {
+ *  Response.Send("404")
+ * }
+ * 
+ * @ErrorHandler(ServiceError)
+ * HandleServiceError(e: ServiceError) {
+ *  Response.Send(e.message)
+ * }
+ * ```
+ * @decorator
+ * @param {(number | (new (...args) => Error))} [error] 
+ * @returns {Decorator}
+ */
+function ErrorHandler(error?: number | (new (...args) => Error)): Decorator {
     return function (target: Object,
         propertyKey: string,
         descriptor: TypedPropertyDescriptor<any>) {
