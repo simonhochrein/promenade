@@ -23,9 +23,9 @@ var errorHandlers = [];
  *  Response.Send("test");
  * }
  * ```
- *
+ * @decorator
  * @param {(string | RegExp)} url
- * @returns {Function}
+ * @returns {Decorator}
  */
 function Post(url) {
     return function (target, propertyKey, descriptor) {
@@ -44,9 +44,9 @@ exports.Post = Post;
  *  Response.Send("test");
  * }
  * ```
- *
+ * @decorator
  * @param {(string | RegExp)} url
- * @returns {Function}
+ * @returns {Decorator}
  */
 function Get(url) {
     return function (target, propertyKey, descriptor) {
@@ -65,9 +65,9 @@ exports.Get = Get;
  *  Response.Send("test");
  * }
  * ```
- *
+ * @decorator
  * @param {(string | RegExp)} url
- * @returns {Function}
+ * @returns {Decorator}
  */
 function Delete(url) {
     return function (target, propertyKey, descriptor) {
@@ -86,9 +86,9 @@ exports.Delete = Delete;
  *  Response.Send("test");
  * }
  * ```
- *
+ * @decorator
  * @param {(string | RegExp)} url
- * @returns {Function}
+ * @returns {Decorator}
  */
 function Put(url) {
     return function (target, propertyKey, descriptor) {
@@ -96,6 +96,25 @@ function Put(url) {
     };
 }
 exports.Put = Put;
+/**
+ * Handles errors thrown in routes
+ *
+ * ### Example:
+ * ```typescript
+ * @ErrorHandler(404)
+ * Handle404() {
+ *  Response.Send("404")
+ * }
+ *
+ * @ErrorHandler(ServiceError)
+ * HandleServiceError(e: ServiceError) {
+ *  Response.Send(e.message)
+ * }
+ * ```
+ * @decorator
+ * @param {(number | (new (...args) => Error))} [error]
+ * @returns {Decorator}
+ */
 function ErrorHandler(error) {
     return function (target, propertyKey, descriptor) {
         if (error) {
