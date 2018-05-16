@@ -2,6 +2,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var url_1 = require("url");
 var Router_1 = require("./Router");
 var BodyParser_1 = require("./BodyParser");
+/**
+ * Handles Routes from Node.JS HTTPServer instance
+ *
+ * ### Example:
+ *
+ * ```typescript
+ * import * as http from 'http';
+ * import "promenade/auto";
+ *
+ * http.createServer(Server()).listen(8888);
+ * ```
+ *
+ * @returns Function
+ */
 function Server() {
     return function (req, res) {
         var url = url_1.parse(req.url);
@@ -14,24 +28,29 @@ function Server() {
             w.res = res;
             w.req = req;
             w.url = url;
-            if (req.method == "POST" || req.method == "PUT") {
-                var bufs = [];
-                req.on('data', function (data) { return bufs.push(data); });
-                req.on('end', function () {
-                    var completeBody = Buffer.concat(bufs).toString();
-                    var _a = BodyParser_1.default(req.headers["content-type"], completeBody), Files = _a.Files, Body = _a.Body;
-                    w.files = Files;
-                    w.body = Body;
-                    w.rawBody = completeBody;
+            try {
+                if (req.method == "POST" || req.method == "PUT") {
+                    var bufs = [];
+                    req.on('data', function (data) { return bufs.push(data); });
+                    req.on('end', function () {
+                        var completeBody = Buffer.concat(bufs).toString();
+                        var _a = BodyParser_1.default(req.headers["content-type"], completeBody), Files = _a.Files, Body = _a.Body;
+                        w.files = Files;
+                        w.body = Body;
+                        w.rawBody = completeBody;
+                        w();
+                    });
+                }
+                else {
                     w();
-                });
+                }
             }
-            else {
-                w();
+            catch (e) {
+                Router_1.Routes.handleError(e, req, res, url);
             }
         }
         else {
-            res.end("404");
+            Router_1.Routes.handleError(404, req, res, url);
         }
     };
 }

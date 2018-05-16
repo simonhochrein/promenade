@@ -1,31 +1,129 @@
 Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * @hidden
+ */
 var routes = [];
 exports.routes = routes;
+/**
+ * @hidden
+ */
 var baseRoutes = {};
+/**
+ * @hidden
+ */
+var errorHandlers = [];
+/**
+ * Handles POST request with specified url
+ *
+ * ### Example:
+ *
+ * ```typescript
+ * @Post("/test")
+ * test() {
+ *  Response.Send("test");
+ * }
+ * ```
+ *
+ * @param {(string | RegExp)} url
+ * @returns {Function}
+ */
 function Post(url) {
     return function (target, propertyKey, descriptor) {
         routes.push({ url: url, type: "POST", handler: target[propertyKey], ClassName: target.constructor.name });
     };
 }
 exports.Post = Post;
+/**
+ * Handles GET request with specified url
+ *
+ * ### Example:
+ *
+ * ```typescript
+ * @Get("/test")
+ * test() {
+ *  Response.Send("test");
+ * }
+ * ```
+ *
+ * @param {(string | RegExp)} url
+ * @returns {Function}
+ */
 function Get(url) {
     return function (target, propertyKey, descriptor) {
         routes.push({ url: url, type: "GET", handler: target[propertyKey], ClassName: target.constructor.name });
     };
 }
 exports.Get = Get;
+/**
+ * Handles DELETE request with specified url
+ *
+ * ### Example:
+ *
+ * ```typescript
+ * @Delete("/test")
+ * test() {
+ *  Response.Send("test");
+ * }
+ * ```
+ *
+ * @param {(string | RegExp)} url
+ * @returns {Function}
+ */
 function Delete(url) {
     return function (target, propertyKey, descriptor) {
         routes.push({ url: url, type: "DELETE", handler: target[propertyKey], ClassName: target.constructor.name });
     };
 }
 exports.Delete = Delete;
+/**
+ * Handles PUT request with specified url
+ *
+ * ### Example:
+ *
+ * ```typescript
+ * @Put("/test")
+ * test() {
+ *  Response.Send("test");
+ * }
+ * ```
+ *
+ * @param {(string | RegExp)} url
+ * @returns {Function}
+ */
 function Put(url) {
     return function (target, propertyKey, descriptor) {
         routes.push({ url: url, type: "PUT", handler: target[propertyKey], ClassName: target.constructor.name });
     };
 }
 exports.Put = Put;
+function ErrorHandler(error) {
+    return function (target, propertyKey, descriptor) {
+        if (error) {
+            if (typeof error == "number") {
+                errorHandlers.push({
+                    errorType: error,
+                    handler: target[propertyKey]
+                });
+            }
+            else {
+                errorHandlers.push({
+                    errorType: error,
+                    handler: target[propertyKey]
+                });
+            }
+        }
+        else {
+            errorHandlers.push({
+                errorType: true,
+                handler: target[propertyKey]
+            });
+        }
+    };
+}
+exports.ErrorHandler = ErrorHandler;
+/**
+ * @hidden
+ */
 function Router(basePath) {
     return function (constructor) {
         var router = new constructor();
@@ -35,6 +133,9 @@ function Router(basePath) {
     };
 }
 exports.Router = Router;
+/**
+ * @hidden
+ */
 var Routes = /** @class */ (function () {
     function Routes() {
     }
@@ -68,6 +169,35 @@ var Routes = /** @class */ (function () {
                 found: true,
                 UrlParameters: urlParameters
             };
+        }
+    };
+    Routes.handleError = function (error, req, res, url) {
+        var errorHandler = errorHandlers.find(function (errorHandler) {
+            if (errorHandler.errorType == true)
+                return true;
+            if (error && error instanceof Error) {
+                if (error instanceof errorHandler.errorType) {
+                    return true;
+                }
+            }
+            else if (error == errorHandler.errorType) {
+                return true;
+            }
+            return false;
+        });
+        if (errorHandler) {
+            var w = function __wrapper() {
+                errorHandler.handler(error);
+            };
+            w.res = res;
+            w.req = req;
+            w.url = url;
+            w();
+        }
+        else {
+            res.statusCode = 500;
+            res.write("" + error);
+            res.end();
         }
     };
     Routes.resolve = function (req, url) {

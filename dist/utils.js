@@ -1,4 +1,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * @hidden
+ */
 function getParent() {
     var caller = getParent.caller;
     while (caller && caller.name != "__wrapper") {

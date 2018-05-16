@@ -1,5 +1,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var querystring_1 = require("querystring");
+/**
+ * @hidden
+ */
 function parseLines(lines) {
     var section = -1;
     var file = {
@@ -57,6 +60,9 @@ function parseLines(lines) {
     }
     return { FileBody: file, FieldBody: field, IsFile: isFile };
 }
+/**
+ * @hidden
+ */
 function BodyParser(type, body) {
     var parts = type.split(";");
     var type = parts[0];

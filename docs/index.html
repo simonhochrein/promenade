@@ -64,8 +64,7 @@
 	<div class="row">
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
-				<h1 id="promenade">Promenade</h1>
-				<div style="text-align:center"><img src="assets/Promenade.svg" /></div>
+				<div style="text-align:center"><img src="assets/Promenade.svg"/></div>
 				<h2 id="install">Install</h2>
 				<p>Install using yarn</p>
 				<pre><code class="lang-bash">$ yarn add https://github.com/simonhochrein/promenade
@@ -105,7 +104,6 @@ http.createServer(Server()).listen(<span class="hljs-number">8888</span>);
 <span class="hljs-keyword">class</span> Main {
     <span class="hljs-meta">@Get</span>(<span class="hljs-string">"/"</span>)
     Index() {
-        Response.Header(<span class="hljs-string">"Connection"</span>, <span class="hljs-string">"Close"</span>);
         Response.Send(<span class="hljs-string">"Hello World!"</span>);
     }
 }
@@ -136,6 +134,9 @@ $ node server.js
 					</li>
 					<li class=" tsd-kind-function tsd-is-not-exported">
 						<a href="globals.html#delete" class="tsd-kind-icon">Delete</a>
+					</li>
+					<li class=" tsd-kind-function tsd-is-not-exported">
+						<a href="globals.html#errorhandler" class="tsd-kind-icon">Error<wbr>Handler</a>
 					</li>
 					<li class=" tsd-kind-function tsd-is-not-exported">
 						<a href="globals.html#get" class="tsd-kind-icon">Get</a>

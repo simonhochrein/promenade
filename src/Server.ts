@@ -19,7 +19,7 @@ import BodyParser from './BodyParser';
  *
  * @returns Function
  */
-export default function Server(): Function {
+export default function Server(): (req: ServerRequest, res: ServerResponse) => void {
     return function (req: ServerRequest, res: ServerResponse) {
         var url = parse(req.url);
         var pathname = url.pathname;
@@ -31,22 +31,26 @@ export default function Server(): Function {
             (w as any).res = res;
             (w as any).req = req;
             (w as any).url = url;
-            if (req.method == "POST" || req.method == "PUT") {
-                var bufs = [];
-                req.on('data', data => bufs.push(data));
-                req.on('end', () => {
-                    var completeBody = Buffer.concat(bufs).toString();
-                    var { Files, Body } = BodyParser(req.headers["content-type"], completeBody);
-                    (w as any).files = Files;
-                    (w as any).body = Body;
-                    (w as any).rawBody = completeBody;
+            try {
+                if (req.method == "POST" || req.method == "PUT") {
+                    var bufs = [];
+                    req.on('data', data => bufs.push(data));
+                    req.on('end', () => {
+                        var completeBody = Buffer.concat(bufs).toString();
+                        var { Files, Body } = BodyParser(req.headers["content-type"], completeBody);
+                        (w as any).files = Files;
+                        (w as any).body = Body;
+                        (w as any).rawBody = completeBody;
+                        w();
+                    })
+                } else {
                     w();
-                })
-            } else {
-                w();
+                }
+            } catch (e) {
+                Routes.handleError(e, req, res, url);
             }
         } else {
-            res.end("404");
+            Routes.handleError(404, req, res, url);
         }
     }
 }

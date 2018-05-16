@@ -1,4 +1,5 @@
 import { ServerRequest } from "http";
+import { inspect } from "util";
 /**
  * @hidden
  */
@@ -11,6 +12,12 @@ let routes = [
 let baseRoutes: { [name: string]: any } = {
 
 };
+/**
+ * @hidden
+ */
+let errorHandlers: { errorType: boolean | number | (new (...args) => Error), handler: (e: Error | number) => void }[] = [
+
+];
 /**
  * Handles POST request with specified url
  * 
@@ -100,6 +107,32 @@ function Put(url: string | RegExp): any {
         routes.push({ url, type: "PUT", handler: target[propertyKey], ClassName: target.constructor.name });
     }
 }
+
+function ErrorHandler(error?: number | (new (...args) => Error)) {
+    return function (target: Object,
+        propertyKey: string,
+        descriptor: TypedPropertyDescriptor<any>) {
+        if (error) {
+            if (typeof error == "number") {
+                errorHandlers.push({
+                    errorType: error,
+                    handler: target[propertyKey]
+                })
+            } else {
+                errorHandlers.push({
+                    errorType: error,
+                    handler: target[propertyKey]
+                })
+            }
+        } else {
+            errorHandlers.push({
+                errorType: true,
+                handler: target[propertyKey]
+            })
+        }
+    }
+}
+
 /**
  * @hidden
  */
@@ -146,6 +179,34 @@ export class Routes {
             }
         }
     }
+
+    static handleError(error: Error | number, req, res, url) {
+        var errorHandler = errorHandlers.find((errorHandler) => {
+            if (errorHandler.errorType == true) return true;
+
+            if (error && error instanceof Error) {
+                if (error instanceof (errorHandler.errorType as (new () => Error))) {
+                    return true;
+                }
+            } else if (error == errorHandler.errorType) {
+                return true;
+            }
+            return false;
+        });
+        if (errorHandler) {
+            var w = function __wrapper() {
+                errorHandler.handler(error);
+            };
+            (w as any).res = res;
+            (w as any).req = req;
+            (w as any).url = url;
+            w();
+        } else {
+            res.statusCode = 500;
+            res.write(`${error}`);
+            res.end();
+        }
+    }
     static resolve(req: ServerRequest, url) {
         var params = [];
         return {
@@ -181,5 +242,6 @@ export {
     Get,
     Put,
     Delete,
+    ErrorHandler,
     Router
 }

@@ -47,7 +47,6 @@ routes/main.ts
 class Main {
     @Get("/")
     Index() {
-        Response.Header("Connection", "Close");
         Response.Send("Hello World!");
     }
 }
