@@ -12,5 +12,6 @@ declare global {
     let Exception: typeof Promenade.Exception;
     let Middleware: typeof Promenade.Middleware;
     let Router: typeof Promenade.Router;
+    let App: typeof Promenade.App;
     let autoload: typeof Promenade.autoload;
 }

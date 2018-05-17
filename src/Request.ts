@@ -45,6 +45,19 @@ export default class Request {
         return getParent().files || [];
     }
     /**
+     * Returns HTTP method of current route
+     * 
+     * ### Example:
+     * ```typescript
+     * console.log(Request.Method)
+     * ```
+     *
+     * @memberof Request
+     */
+    static get Method(): any {
+        return getParent().req.method;
+    }
+    /**
      * Returns URL of current route
      * 
      * ### Example:

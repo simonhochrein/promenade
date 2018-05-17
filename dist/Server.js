@@ -21,15 +21,15 @@ function Server() {
         var url = url_1.parse(req.url);
         var pathname = url.pathname;
         Router_1.Routes.runMiddleware(req, res, url, function () {
-            var ret = Router_1.Routes.resolve(req, url);
-            if (ret.route) {
-                var w = function __wrapper() {
-                    ret.route.handler.apply(null, ret.params);
-                };
-                w.res = res;
-                w.req = req;
-                w.url = url;
-                try {
+            try {
+                var ret = Router_1.Routes.resolve(req, url);
+                if (ret.route) {
+                    var w = function __wrapper() {
+                        ret.route.handler.apply(null, ret.params);
+                    };
+                    w.res = res;
+                    w.req = req;
+                    w.url = url;
                     if (req.method == "POST" || req.method == "PUT") {
                         var bufs = [];
                         req.on('data', function (data) { return bufs.push(data); });
@@ -46,12 +46,12 @@ function Server() {
                         w();
                     }
                 }
-                catch (e) {
-                    Router_1.Routes.handleError(e, req, res, url);
+                else {
+                    Router_1.Routes.handleError(404, req, res, url);
                 }
             }
-            else {
-                Router_1.Routes.handleError(404, req, res, url);
+            catch (e) {
+                Router_1.Routes.handleError(e, req, res, url);
             }
         });
     };

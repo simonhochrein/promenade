@@ -3,6 +3,7 @@ import { routes, Routes } from "./Router";
 import * as querystring from 'querystring';
 import { ServerRequest, ServerResponse } from "http";
 import BodyParser from './BodyParser';
+import { Wrapper } from "./utils";
 
 
 /**
@@ -24,34 +25,34 @@ export default function Server(): (req: ServerRequest, res: ServerResponse) => v
         var url = parse(req.url);
         var pathname = url.pathname;
         Routes.runMiddleware(req, res, url, () => {
-            var ret = Routes.resolve(req, url);
-            if (ret.route) {
-                var w = function __wrapper() {
-                    ret.route.handler.apply(null, ret.params);
-                };
-                (w as any).res = res;
-                (w as any).req = req;
-                (w as any).url = url;
-                try {
+            try {
+                var ret = Routes.resolve(req, url);
+                if (ret.route) {
+                    var w: Wrapper = function __wrapper() {
+                        ret.route.handler.apply(null, ret.params);
+                    };
+                    w.res = res;
+                    w.req = req;
+                    w.url = url;
                     if (req.method == "POST" || req.method == "PUT") {
                         var bufs = [];
                         req.on('data', data => bufs.push(data));
                         req.on('end', () => {
                             var completeBody = Buffer.concat(bufs).toString();
                             var { Files, Body } = BodyParser(req.headers["content-type"], completeBody);
-                            (w as any).files = Files;
-                            (w as any).body = Body;
-                            (w as any).rawBody = completeBody;
+                            w.files = Files;
+                            w.body = Body;
+                            w.rawBody = completeBody;
                             w();
                         })
                     } else {
                         w();
                     }
-                } catch (e) {
-                    Routes.handleError(e, req, res, url);
+                } else {
+                    Routes.handleError(404, req, res, url);
                 }
-            } else {
-                Routes.handleError(404, req, res, url);
+            } catch (e) {
+                Routes.handleError(e, req, res, url);
             }
         });
     }

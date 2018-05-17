@@ -55,6 +55,23 @@ var Request = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(Request, "Method", {
+        /**
+         * Returns HTTP method of current route
+         *
+         * ### Example:
+         * ```typescript
+         * console.log(Request.Method)
+         * ```
+         *
+         * @memberof Request
+         */
+        get: function () {
+            return utils_1.getParent().req.method;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(Request, "Url", {
         /**
          * Returns URL of current route

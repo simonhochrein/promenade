@@ -8,6 +8,8 @@ var Response_1 = require("./Response");
 exports.Response = Response_1.default;
 var Server_1 = require("./Server");
 exports.Server = Server_1.default;
+var App_1 = require("./App");
+exports.App = App_1.default;
 __export(require("./Router"));
 __export(require("./Autoload"));
 __export(require("./Autoload"));

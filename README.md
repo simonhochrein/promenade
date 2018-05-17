@@ -59,4 +59,10 @@ $ cd dist
 $ node server.js
 ```
 
+## Performance
+
+| Express | Promenade |
+| ------- | --------- |
+| 16127.91 requests/second | 18899.97 requests/second  |
+
 ## [Documentation](https://simonhochrein.github.io/promenade)

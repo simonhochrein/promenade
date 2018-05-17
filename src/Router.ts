@@ -1,5 +1,7 @@
 import { ServerRequest, ServerResponse } from "http";
 import { inspect } from "util";
+import BodyParser from "./BodyParser";
+import { Wrapper } from "./utils";
 /**
  * @hidden
  */
@@ -327,28 +329,40 @@ export class Routes {
     static runMiddleware(req: ServerRequest, res: ServerResponse, url, cb) {
         var params = [];
         var next = this.middleware(url);
-        function runMiddleware() {
-            var w = function __wrapper() {
-                var ret = next();
-                if (ret) {
-                    var [params, { handler }] = ret;
-                    handler.apply(null, params);
-                } else {
-                    cb();
+        var w: Wrapper = function __wrapper() {
+            var ret = next();
+            if (ret) {
+                var [params, { handler }] = ret;
+                handler.apply(null, params);
+            } else {
+                cb();
+            }
+        };
+        w.res = res;
+        w.req = req;
+        w.url = url;
+        w.next = w;
+        if (req.method == "POST" || req.method == "PUT") {
+            var bufs = [];
+            req.on('data', data => bufs.push(data));
+            req.on('end', () => {
+                var completeBody = Buffer.concat(bufs).toString();
+                var { Files, Body } = BodyParser(req.headers["content-type"], completeBody);
+                w.files = Files;
+                w.body = Body;
+                w.rawBody = completeBody;
+                try {
+                    w();
+                } catch (e) {
+                    Routes.handleError(e, req, res, url);
                 }
-            };
-            (w as any).res = res;
-            (w as any).req = req;
-            (w as any).url = url;
-            (w as any).next = runMiddleware;
-            w();
+            })
+        } else {
+            try {
+                w();
+            } catch (e) {
+                Routes.handleError(e, req, res, url);
+            }
         }
-        runMiddleware();
-        // var m = middlewareHandlers.filter((middleware, key) => {
-
-        // });
-        // m.forEach(({ handler }) => {
-        //     handler()
-        // });
     }
 }

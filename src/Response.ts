@@ -1,4 +1,6 @@
 import { getParent } from "./utils";
+import * as zlib from 'zlib';
+import App from "./App";
 
 export default class Response {
     /**
@@ -14,17 +16,29 @@ export default class Response {
      * @memberof Response
      */
     static Send(value: any) {
-        let parent;
-        if (parent = getParent()) {
-            if (typeof value == "object") {
+        let parent = getParent();
+        if (typeof value == "object") {
+            if (App.get('gzip') == true) {
+                parent.res.setHeader("Content-Encoding", "gzip");
+                var zip = zlib.createGzip();
+                zip.pipe(parent.res);
+                zip.write(JSON.stringify(value));
+                zip.end();
+            } else {
                 parent.res.write(JSON.stringify(value));
                 parent.res.end();
+            }
+        } else {
+            if (App.get('gzip') == true) {
+                parent.res.setHeader("Content-Encoding", "gzip");
+                var zip = zlib.createGzip();
+                zip.pipe(parent.res);
+                zip.write(value.toString());
+                zip.end();
             } else {
                 parent.res.write(value.toString());
                 parent.res.end();
             }
-        } else {
-            throw new Error("Can't call Response.Write outside of a route");
         }
     }
     /**
@@ -61,12 +75,7 @@ export default class Response {
      * @memberof Response
      */
     static Status(status: number) {
-        let parent = getParent();
-        if (parent) {
-            parent.res.statusCode = status;
-        } else {
-            throw new Error("Can't call Response.Write outside of a route");
-        }
+        getParent().res.statusCode = status;
     }
     /**
      * Throws HTTP error

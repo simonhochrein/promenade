@@ -1,4 +1,5 @@
 Object.defineProperty(exports, "__esModule", { value: true });
+var BodyParser_1 = require("./BodyParser");
 /**
  * @hidden
  */
@@ -129,17 +130,17 @@ exports.Put = Put;
  *
  * ### Example:
  * ```typescript
- * @ErrorHandler(404)
+ * @Exception(404)
  * Handle404() {
  *  Response.Send("404")
  * }
  *
- * @ErrorHandler(ServiceError)
+ * @Exception(ServiceError)
  * HandleServiceError(e: ServiceError) {
  *  Response.Send(e.message)
  * }
  *
- * @ErrorHandler()
+ * @Exception()
  * HandleError(e: Error) {
  *  Response.Send(e.message)
  * }
@@ -311,29 +312,45 @@ var Routes = /** @class */ (function () {
     Routes.runMiddleware = function (req, res, url, cb) {
         var params = [];
         var next = this.middleware(url);
-        function runMiddleware() {
-            var w = function __wrapper() {
-                var ret = next();
-                if (ret) {
-                    var params = ret[0], handler = ret[1].handler;
-                    handler.apply(null, params);
+        var w = function __wrapper() {
+            var ret = next();
+            if (ret) {
+                var params = ret[0], handler = ret[1].handler;
+                handler.apply(null, params);
+            }
+            else {
+                cb();
+            }
+        };
+        w.res = res;
+        w.req = req;
+        w.url = url;
+        w.next = w;
+        if (req.method == "POST" || req.method == "PUT") {
+            var bufs = [];
+            req.on('data', function (data) { return bufs.push(data); });
+            req.on('end', function () {
+                var completeBody = Buffer.concat(bufs).toString();
+                var _a = BodyParser_1.default(req.headers["content-type"], completeBody), Files = _a.Files, Body = _a.Body;
+                w.files = Files;
+                w.body = Body;
+                w.rawBody = completeBody;
+                try {
+                    w();
                 }
-                else {
-                    cb();
+                catch (e) {
+                    Routes.handleError(e, req, res, url);
                 }
-            };
-            w.res = res;
-            w.req = req;
-            w.url = url;
-            w.next = runMiddleware;
-            w();
+            });
         }
-        runMiddleware();
-        // var m = middlewareHandlers.filter((middleware, key) => {
-        // });
-        // m.forEach(({ handler }) => {
-        //     handler()
-        // });
+        else {
+            try {
+                w();
+            }
+            catch (e) {
+                Routes.handleError(e, req, res, url);
+            }
+        }
     };
     return Routes;
 }());

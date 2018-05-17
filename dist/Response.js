@@ -1,5 +1,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var utils_1 = require("./utils");
+var zlib = require("zlib");
+var App_1 = require("./App");
 var Response = /** @class */ (function () {
     function Response() {
     }
@@ -16,19 +18,32 @@ var Response = /** @class */ (function () {
      * @memberof Response
      */
     Response.Send = function (value) {
-        var parent;
-        if (parent = utils_1.getParent()) {
-            if (typeof value == "object") {
+        var parent = utils_1.getParent();
+        if (typeof value == "object") {
+            if (App_1.default.get('gzip') == true) {
+                parent.res.setHeader("Content-Encoding", "gzip");
+                var zip = zlib.createGzip();
+                zip.pipe(parent.res);
+                zip.write(JSON.stringify(value));
+                zip.end();
+            }
+            else {
                 parent.res.write(JSON.stringify(value));
                 parent.res.end();
+            }
+        }
+        else {
+            if (App_1.default.get('gzip') == true) {
+                parent.res.setHeader("Content-Encoding", "gzip");
+                var zip = zlib.createGzip();
+                zip.pipe(parent.res);
+                zip.write(value.toString());
+                zip.end();
             }
             else {
                 parent.res.write(value.toString());
                 parent.res.end();
             }
-        }
-        else {
-            throw new Error("Can't call Response.Write outside of a route");
         }
     };
     /**
@@ -66,13 +81,7 @@ var Response = /** @class */ (function () {
      * @memberof Response
      */
     Response.Status = function (status) {
-        var parent = utils_1.getParent();
-        if (parent) {
-            parent.res.statusCode = status;
-        }
-        else {
-            throw new Error("Can't call Response.Write outside of a route");
-        }
+        utils_1.getParent().res.statusCode = status;
     };
     /**
      * Throws HTTP error
