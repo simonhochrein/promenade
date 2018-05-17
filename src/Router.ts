@@ -153,17 +153,17 @@ export function Put(url: string | RegExp): Decorator {
  * 
  * ### Example:
  * ```typescript
- * @ErrorHandler(404)
+ * @Exception(404)
  * Handle404() {
  *  Response.Send("404")
  * }
  * 
- * @ErrorHandler(ServiceError)
+ * @Exception(ServiceError)
  * HandleServiceError(e: ServiceError) {
  *  Response.Send(e.message)
  * }
  * 
- * @ErrorHandler()
+ * @Exception()
  * HandleError(e: Error) {
  *  Response.Send(e.message)
  * }
