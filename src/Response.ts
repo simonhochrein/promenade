@@ -83,4 +83,19 @@ export default class Response {
     static Error(status: number) {
         throw status;
     }
+    /**
+     * Advances to next middleware or the route
+     * 
+     * ### Example:
+     * ```typescript
+     * Response.Error(500);
+     * ```
+     * 
+     * @static
+     * @param {number} status 
+     * @memberof Response
+     */
+    static Next() {
+        getParent().next();
+    }
 }

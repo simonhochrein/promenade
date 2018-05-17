@@ -9,7 +9,8 @@ declare global {
     let Post: typeof Promenade.Post;
     let Delete: typeof Promenade.Delete;
     let Put: typeof Promenade.Put;
-    let ErrorHandler: typeof Promenade.ErrorHandler;
+    let Exception: typeof Promenade.Exception;
+    let Middleware: typeof Promenade.Middleware;
     let Router: typeof Promenade.Router;
     let autoload: typeof Promenade.autoload;
 }

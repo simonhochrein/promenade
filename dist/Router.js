@@ -2,8 +2,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * @hidden
  */
-var routes = [];
-exports.routes = routes;
+exports.routes = [];
+/**
+ * @hidden
+ */
+var middlewareHandlers = [];
 /**
  * @hidden
  */
@@ -29,10 +32,35 @@ var errorHandlers = [];
  */
 function Post(url) {
     return function (target, propertyKey, descriptor) {
-        routes.push({ url: url, type: "POST", handler: target[propertyKey], ClassName: target.constructor.name });
+        exports.routes.push({ url: url, type: "POST", handler: target[propertyKey], ClassName: target.constructor.name });
     };
 }
 exports.Post = Post;
+/**
+ * HTTP Middleware
+ *
+ * ### Example:
+ *
+ * ```typescript
+ * @Middleware("/test")
+ * test() {
+ *  Response.Send("test");
+ * }
+ * @Middleware()
+ * test() {
+ *  Response.Send("test");
+ * }
+ * ```
+ * @decorator
+ * @param {(string | RegExp)} [url]
+ * @returns {Decorator}
+ */
+function Middleware(url) {
+    return function (target, propertyKey, descriptor) {
+        middlewareHandlers.push({ url: url || true, handler: target[propertyKey], ClassName: target.constructor.name });
+    };
+}
+exports.Middleware = Middleware;
 /**
  * Handles GET request with specified url
  *
@@ -50,7 +78,7 @@ exports.Post = Post;
  */
 function Get(url) {
     return function (target, propertyKey, descriptor) {
-        routes.push({ url: url, type: "GET", handler: target[propertyKey], ClassName: target.constructor.name });
+        exports.routes.push({ url: url, type: "GET", handler: target[propertyKey], ClassName: target.constructor.name });
     };
 }
 exports.Get = Get;
@@ -71,7 +99,7 @@ exports.Get = Get;
  */
 function Delete(url) {
     return function (target, propertyKey, descriptor) {
-        routes.push({ url: url, type: "DELETE", handler: target[propertyKey], ClassName: target.constructor.name });
+        exports.routes.push({ url: url, type: "DELETE", handler: target[propertyKey], ClassName: target.constructor.name });
     };
 }
 exports.Delete = Delete;
@@ -92,7 +120,7 @@ exports.Delete = Delete;
  */
 function Put(url) {
     return function (target, propertyKey, descriptor) {
-        routes.push({ url: url, type: "PUT", handler: target[propertyKey], ClassName: target.constructor.name });
+        exports.routes.push({ url: url, type: "PUT", handler: target[propertyKey], ClassName: target.constructor.name });
     };
 }
 exports.Put = Put;
@@ -110,26 +138,23 @@ exports.Put = Put;
  * HandleServiceError(e: ServiceError) {
  *  Response.Send(e.message)
  * }
+ *
+ * @ErrorHandler()
+ * HandleError(e: Error) {
+ *  Response.Send(e.message)
+ * }
  * ```
  * @decorator
  * @param {(number | (new (...args) => Error))} [error]
  * @returns {Decorator}
  */
-function ErrorHandler(error) {
+function Exception(error) {
     return function (target, propertyKey, descriptor) {
         if (error) {
-            if (typeof error == "number") {
-                errorHandlers.push({
-                    errorType: error,
-                    handler: target[propertyKey]
-                });
-            }
-            else {
-                errorHandlers.push({
-                    errorType: error,
-                    handler: target[propertyKey]
-                });
-            }
+            errorHandlers.push({
+                errorType: error,
+                handler: target[propertyKey]
+            });
         }
         else {
             errorHandlers.push({
@@ -139,7 +164,7 @@ function ErrorHandler(error) {
         }
     };
 }
-exports.ErrorHandler = ErrorHandler;
+exports.Exception = Exception;
 /**
  * @hidden
  */
@@ -223,7 +248,7 @@ var Routes = /** @class */ (function () {
         var _this = this;
         var params = [];
         return {
-            route: routes.find(function (route) {
+            route: exports.routes.find(function (route) {
                 if (route.type != req.method)
                     return false;
                 if (baseRoutes[route.ClassName]) {
@@ -249,6 +274,66 @@ var Routes = /** @class */ (function () {
             }),
             params: params
         };
+    };
+    Routes.middleware = function (url) {
+        var _this = this;
+        var key = 0;
+        var next = function () {
+            for (; key < middlewareHandlers.length; key++) {
+                var middleware = middlewareHandlers[key];
+                if (middleware.url === true) {
+                    ++key;
+                    return [null, middleware];
+                }
+                if (baseRoutes[middleware.ClassName]) {
+                    if (url.pathname.slice(0, baseRoutes[middleware.ClassName].length) == baseRoutes[middleware.ClassName]) {
+                        var path = url.pathname.slice(baseRoutes[middleware.ClassName].length, url.pathname.length);
+                        var match = _this.match(middleware.url, path);
+                        if (match.found) {
+                            var params = match.UrlParameters;
+                            ++key;
+                            return [params, middleware];
+                        }
+                    }
+                }
+                else {
+                    var match = _this.match(middleware.url, url.pathname);
+                    if (match.found) {
+                        var params = match.UrlParameters;
+                        ++key;
+                        return [params, middleware];
+                    }
+                }
+            }
+        };
+        return next;
+    };
+    Routes.runMiddleware = function (req, res, url, cb) {
+        var params = [];
+        var next = this.middleware(url);
+        function runMiddleware() {
+            var w = function __wrapper() {
+                var ret = next();
+                if (ret) {
+                    var params = ret[0], handler = ret[1].handler;
+                    handler.apply(null, params);
+                }
+                else {
+                    cb();
+                }
+            };
+            w.res = res;
+            w.req = req;
+            w.url = url;
+            w.next = runMiddleware;
+            w();
+        }
+        runMiddleware();
+        // var m = middlewareHandlers.filter((middleware, key) => {
+        // });
+        // m.forEach(({ handler }) => {
+        //     handler()
+        // });
     };
     return Routes;
 }());

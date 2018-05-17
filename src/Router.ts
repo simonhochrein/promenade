@@ -1,4 +1,4 @@
-import { ServerRequest } from "http";
+import { ServerRequest, ServerResponse } from "http";
 import { inspect } from "util";
 /**
  * @hidden
@@ -10,7 +10,13 @@ type Decorator = (target: Object,
 /**
  * @hidden
  */
-let routes = [
+export let routes = [
+
+];
+/**
+ * @hidden
+ */
+let middlewareHandlers = [
 
 ];
 /**
@@ -40,11 +46,38 @@ let errorHandlers: { errorType: boolean | number | (new (...args) => Error), han
  * @param {(string | RegExp)} url 
  * @returns {Decorator} 
  */
-function Post(url: string | RegExp): Decorator {
+export function Post(url: string | RegExp): Decorator {
     return function (target: Object,
         propertyKey: string,
         descriptor: TypedPropertyDescriptor<any>) {
         routes.push({ url, type: "POST", handler: target[propertyKey], ClassName: target.constructor.name });
+    }
+}
+
+/**
+ * HTTP Middleware
+ * 
+ * ### Example:
+ * 
+ * ```typescript
+ * @Middleware("/test")
+ * test() {
+ *  Response.Send("test");
+ * }
+ * @Middleware()
+ * test() {
+ *  Response.Send("test");
+ * }
+ * ```
+ * @decorator
+ * @param {(string | RegExp)} [url]
+ * @returns {Decorator} 
+ */
+export function Middleware(url?: string | RegExp): Decorator {
+    return function (target: Object,
+        propertyKey: string,
+        descriptor: TypedPropertyDescriptor<any>) {
+        middlewareHandlers.push({ url: url || true, handler: target[propertyKey], ClassName: target.constructor.name });
     }
 }
 
@@ -63,7 +96,7 @@ function Post(url: string | RegExp): Decorator {
  * @param {(string | RegExp)} url 
  * @returns {Decorator} 
  */
-function Get(url: string | RegExp): Decorator {
+export function Get(url: string | RegExp): Decorator {
     return function (target: Object,
         propertyKey: string,
         descriptor: TypedPropertyDescriptor<any>) {
@@ -85,7 +118,7 @@ function Get(url: string | RegExp): Decorator {
  * @param {(string | RegExp)} url 
  * @returns {Decorator} 
  */
-function Delete(url: string | RegExp): Decorator {
+export function Delete(url: string | RegExp): Decorator {
     return function (target: Object,
         propertyKey: string,
         descriptor: TypedPropertyDescriptor<any>) {
@@ -107,7 +140,7 @@ function Delete(url: string | RegExp): Decorator {
  * @param {(string | RegExp)} url 
  * @returns {Decorator} 
  */
-function Put(url: string | RegExp): Decorator {
+export function Put(url: string | RegExp): Decorator {
     return function (target: Object,
         propertyKey: string,
         descriptor: TypedPropertyDescriptor<any>) {
@@ -129,27 +162,25 @@ function Put(url: string | RegExp): Decorator {
  * HandleServiceError(e: ServiceError) {
  *  Response.Send(e.message)
  * }
+ * 
+ * @ErrorHandler()
+ * HandleError(e: Error) {
+ *  Response.Send(e.message)
+ * }
  * ```
  * @decorator
  * @param {(number | (new (...args) => Error))} [error] 
  * @returns {Decorator}
  */
-function ErrorHandler(error?: number | (new (...args) => Error)): Decorator {
+export function Exception(error?: number | (new (...args) => Error)): Decorator {
     return function (target: Object,
         propertyKey: string,
         descriptor: TypedPropertyDescriptor<any>) {
         if (error) {
-            if (typeof error == "number") {
-                errorHandlers.push({
-                    errorType: error,
-                    handler: target[propertyKey]
-                })
-            } else {
-                errorHandlers.push({
-                    errorType: error,
-                    handler: target[propertyKey]
-                })
-            }
+            errorHandlers.push({
+                errorType: error,
+                handler: target[propertyKey]
+            })
         } else {
             errorHandlers.push({
                 errorType: true,
@@ -162,7 +193,7 @@ function ErrorHandler(error?: number | (new (...args) => Error)): Decorator {
 /**
  * @hidden
  */
-function Router(basePath?: string) {
+export function Router(basePath?: string) {
     return function (constructor) {
         var router = new constructor();
         if (basePath) {
@@ -260,14 +291,64 @@ export class Routes {
             params
         };
     }
-}
 
-export {
-    routes,
-    Post,
-    Get,
-    Put,
-    Delete,
-    ErrorHandler,
-    Router
+    static middleware(url) {
+        var key = 0;
+        var next = () => {
+            for (; key < middlewareHandlers.length; key++) {
+                var middleware = middlewareHandlers[key];
+                if (middleware.url === true) {
+                    ++key;
+                    return [null, middleware];
+                }
+
+                if (baseRoutes[middleware.ClassName]) {
+                    if (url.pathname.slice(0, baseRoutes[middleware.ClassName].length) == baseRoutes[middleware.ClassName]) {
+                        var path = url.pathname.slice(baseRoutes[middleware.ClassName].length, url.pathname.length);
+                        var match = this.match(middleware.url, path);
+                        if (match.found) {
+                            var params = match.UrlParameters;
+                            ++key;
+                            return [params, middleware];
+                        }
+                    }
+                } else {
+                    var match = this.match(middleware.url, url.pathname);
+                    if (match.found) {
+                        var params = match.UrlParameters;
+                        ++key;
+                        return [params, middleware];
+                    }
+                }
+            }
+        }
+        return next;
+    }
+    static runMiddleware(req: ServerRequest, res: ServerResponse, url, cb) {
+        var params = [];
+        var next = this.middleware(url);
+        function runMiddleware() {
+            var w = function __wrapper() {
+                var ret = next();
+                if (ret) {
+                    var [params, { handler }] = ret;
+                    handler.apply(null, params);
+                } else {
+                    cb();
+                }
+            };
+            (w as any).res = res;
+            (w as any).req = req;
+            (w as any).url = url;
+            (w as any).next = runMiddleware;
+            w();
+        }
+        runMiddleware();
+        // var m = middlewareHandlers.filter((middleware, key) => {
+
+        // });
+        // m.forEach(({ handler }) => {
+        //     handler()
+        // });
+    }
 }

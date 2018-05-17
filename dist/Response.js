@@ -89,6 +89,21 @@ var Response = /** @class */ (function () {
     Response.Error = function (status) {
         throw status;
     };
+    /**
+     * Advances to next middleware or the route
+     *
+     * ### Example:
+     * ```typescript
+     * Response.Error(500);
+     * ```
+     *
+     * @static
+     * @param {number} status
+     * @memberof Response
+     */
+    Response.Next = function () {
+        utils_1.getParent().next();
+    };
     return Response;
 }());
 exports.default = Response;

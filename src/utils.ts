@@ -10,6 +10,7 @@ interface Wrapper {
     files: File[];
     body: { [name: string]: any };
     rawBody: string;
+    next();
 }
 /**
  * @hidden

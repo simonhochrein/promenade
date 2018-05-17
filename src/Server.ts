@@ -23,34 +23,36 @@ export default function Server(): (req: ServerRequest, res: ServerResponse) => v
     return function (req: ServerRequest, res: ServerResponse) {
         var url = parse(req.url);
         var pathname = url.pathname;
-        var ret = Routes.resolve(req, url);
-        if (ret.route) {
-            var w = function __wrapper() {
-                ret.route.handler.apply(null, ret.params);
-            };
-            (w as any).res = res;
-            (w as any).req = req;
-            (w as any).url = url;
-            try {
-                if (req.method == "POST" || req.method == "PUT") {
-                    var bufs = [];
-                    req.on('data', data => bufs.push(data));
-                    req.on('end', () => {
-                        var completeBody = Buffer.concat(bufs).toString();
-                        var { Files, Body } = BodyParser(req.headers["content-type"], completeBody);
-                        (w as any).files = Files;
-                        (w as any).body = Body;
-                        (w as any).rawBody = completeBody;
+        Routes.runMiddleware(req, res, url, () => {
+            var ret = Routes.resolve(req, url);
+            if (ret.route) {
+                var w = function __wrapper() {
+                    ret.route.handler.apply(null, ret.params);
+                };
+                (w as any).res = res;
+                (w as any).req = req;
+                (w as any).url = url;
+                try {
+                    if (req.method == "POST" || req.method == "PUT") {
+                        var bufs = [];
+                        req.on('data', data => bufs.push(data));
+                        req.on('end', () => {
+                            var completeBody = Buffer.concat(bufs).toString();
+                            var { Files, Body } = BodyParser(req.headers["content-type"], completeBody);
+                            (w as any).files = Files;
+                            (w as any).body = Body;
+                            (w as any).rawBody = completeBody;
+                            w();
+                        })
+                    } else {
                         w();
-                    })
-                } else {
-                    w();
+                    }
+                } catch (e) {
+                    Routes.handleError(e, req, res, url);
                 }
-            } catch (e) {
-                Routes.handleError(e, req, res, url);
+            } else {
+                Routes.handleError(404, req, res, url);
             }
-        } else {
-            Routes.handleError(404, req, res, url);
-        }
+        });
     }
 }

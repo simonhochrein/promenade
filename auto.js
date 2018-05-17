@@ -1,10 +1,11 @@
-const { Get, Post, Put, Delete, Request, Response, Router, Server, autoload, ErrorHandler } = require('./dist/index');
+const { Get, Post, Put, Delete, Request, Response, Router, Server, autoload, Exception, Middleware } = require('./dist/index');
 
 global["Get"] = Get;
 global["Post"] = Post;
 global["Put"] = Put;
 global["Delete"] = Delete;
-global["ErrorHandler"] = ErrorHandler;
+global["Middleware"] = Middleware;
+global["Exception"] = Exception;
 global["Request"] = Request;
 global["Response"] = Response;
 global["Router"] = Router;
