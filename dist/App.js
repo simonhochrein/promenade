@@ -35,7 +35,7 @@ var App = /** @class */ (function () {
         return this.settings[key] = value;
     };
     App.settings = {
-        gzip: true
+        gzip: false
     };
     return App;
 }());

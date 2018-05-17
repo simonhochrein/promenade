@@ -2,7 +2,7 @@ type SettingName = "gzip";
 
 export default class App {
     public static settings = {
-        gzip: true
+        gzip: false
     };
     /**
      * Gets app local
