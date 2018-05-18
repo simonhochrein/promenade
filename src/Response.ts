@@ -16,31 +16,45 @@ export default class Response {
      * @param {*} value 
      * @memberof Response
      */
-    static Send(value: any) {
+    static Send(value: string) {
         let parent = trace();
-        if (typeof value == "object") {
-            if (App.get('gzip') == true) {
-                parent.res.setHeader("Content-Encoding", "gzip");
-                var zip = zlib.createGzip();
-                zip.pipe(parent.res);
-                zip.write(JSON.stringify(value));
-                zip.end();
-            } else {
-                parent.res.write(JSON.stringify(value));
-                parent.res.end();
-            }
+        if (App.get('gzip') == true) {
+            parent.res.setHeader("Content-Encoding", "gzip");
+            var zip = zlib.createGzip();
+            zip.pipe(parent.res);
+            zip.write(value.toString());
+            zip.end();
         } else {
-            if (App.get('gzip') == true) {
-                parent.res.setHeader("Content-Encoding", "gzip");
-                var zip = zlib.createGzip();
-                zip.pipe(parent.res);
-                zip.write(value.toString());
-                zip.end();
-            } else {
-                parent.res.write(value.toString());
-                parent.res.end();
-            }
+            // parent.res.write(value);
+            parent.res.end(value);
         }
+        remove();
+    }
+    /**
+     * Send JSON response to user
+     * 
+     * ### Example:
+     * ```typescript
+     * Response.Json({ status: "ok" })
+     * ```
+     * 
+     * @static
+     * @param {*} value 
+     * @memberof Response
+     */
+    static Json(value: any) {
+        let parent = trace();
+        if (App.get('gzip') == true) {
+            parent.res.setHeader("Content-Encoding", "gzip");
+            var zip = zlib.createGzip();
+            zip.pipe(parent.res);
+            zip.write(JSON.stringify(value));
+            zip.end();
+            remove();
+            return;
+        }
+        var json = JSON.stringify(value);
+        parent.res.end(json);
         remove();
     }
     /**

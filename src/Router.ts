@@ -2,7 +2,7 @@ import { ServerRequest, ServerResponse } from "http";
 import { inspect } from "util";
 import BodyParser from "./BodyParser";
 import { Wrapper } from "./utils";
-import { createWrapper } from "./Wrapper";
+import { createWrapper, remove } from "./Wrapper";
 /**
  * @hidden
  */
@@ -335,6 +335,7 @@ export class Routes {
                 var [params, { handler }] = ret;
                 handler.apply(null, params);
             } else {
+                remove();
                 cb();
             }
         };

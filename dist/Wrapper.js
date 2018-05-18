@@ -1,7 +1,16 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var seq = 0;
+/**
+ * @hidden
+ */
+var seq = -1;
+/**
+ * @hidden
+ */
 var __wrappers = {};
+/**
+ * @hidden
+ */
 function createWrapper(req, res, url) {
     var i = (++seq).toString();
     var func = (new Function("return function __wrapper_" + i + "(fn) {fn()}")());
@@ -14,6 +23,9 @@ function createWrapper(req, res, url) {
     return __wrappers[i];
 }
 exports.createWrapper = createWrapper;
+/**
+ * @hidden
+ */
 function trace() {
     var e = new Error();
     var lines = e.stack.split("\n");
@@ -26,8 +38,12 @@ function trace() {
     throw new Error("Cannot call method outside of route");
 }
 exports.trace = trace;
+/**
+ * @hidden
+ */
 function remove() {
     var name = trace().name;
     delete __wrappers[name.slice(10, name.length)];
 }
 exports.remove = remove;
+//# sourceMappingURL=Wrapper.js.map

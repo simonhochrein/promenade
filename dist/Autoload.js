@@ -25,3 +25,4 @@ function autoload(rootPath) {
     });
 }
 exports.autoload = autoload;
+//# sourceMappingURL=Autoload.js.map

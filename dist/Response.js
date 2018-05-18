@@ -21,32 +21,44 @@ var Response = /** @class */ (function () {
      */
     Response.Send = function (value) {
         var parent = Wrapper_1.trace();
-        if (typeof value == "object") {
-            if (App_1.default.get('gzip') == true) {
-                parent.res.setHeader("Content-Encoding", "gzip");
-                var zip = zlib.createGzip();
-                zip.pipe(parent.res);
-                zip.write(JSON.stringify(value));
-                zip.end();
-            }
-            else {
-                parent.res.write(JSON.stringify(value));
-                parent.res.end();
-            }
+        if (App_1.default.get('gzip') == true) {
+            parent.res.setHeader("Content-Encoding", "gzip");
+            var zip = zlib.createGzip();
+            zip.pipe(parent.res);
+            zip.write(value.toString());
+            zip.end();
         }
         else {
-            if (App_1.default.get('gzip') == true) {
-                parent.res.setHeader("Content-Encoding", "gzip");
-                var zip = zlib.createGzip();
-                zip.pipe(parent.res);
-                zip.write(value.toString());
-                zip.end();
-            }
-            else {
-                parent.res.write(value.toString());
-                parent.res.end();
-            }
+            // parent.res.write(value);
+            parent.res.end(value);
         }
+        Wrapper_1.remove();
+    };
+    /**
+     * Send JSON response to user
+     *
+     * ### Example:
+     * ```typescript
+     * Response.Json({ status: "ok" })
+     * ```
+     *
+     * @static
+     * @param {*} value
+     * @memberof Response
+     */
+    Response.Json = function (value) {
+        var parent = Wrapper_1.trace();
+        if (App_1.default.get('gzip') == true) {
+            parent.res.setHeader("Content-Encoding", "gzip");
+            var zip = zlib.createGzip();
+            zip.pipe(parent.res);
+            zip.write(JSON.stringify(value));
+            zip.end();
+            Wrapper_1.remove();
+            return;
+        }
+        var json = JSON.stringify(value);
+        parent.res.end(json);
         Wrapper_1.remove();
     };
     /**
@@ -119,3 +131,4 @@ var Response = /** @class */ (function () {
     return Response;
 }());
 exports.default = Response;
+//# sourceMappingURL=Response.js.map

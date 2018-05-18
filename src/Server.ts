@@ -6,6 +6,10 @@ import BodyParser from './BodyParser';
 import { Wrapper } from "./utils";
 import { createWrapper } from "./Wrapper";
 
+/**
+ * @hidden
+ */
+var sockets = {};
 
 /**
  * Handles Routes from Node.JS HTTPServer instance
@@ -32,7 +36,7 @@ export default function Server(): (req: ServerRequest, res: ServerResponse) => v
                     var w = createWrapper(req, res, url);
                     if (req.method == "POST" || req.method == "PUT") {
                         var bufs = [];
-                        req.on('data', data => bufs.push(data));
+                        req.on('readable', data => bufs.push(data));
                         req.on('end', () => {
                             var completeBody = Buffer.concat(bufs).toString();
                             var { Files, Body } = BodyParser(req.headers["content-type"], completeBody);
@@ -41,16 +45,19 @@ export default function Server(): (req: ServerRequest, res: ServerResponse) => v
                             w.rawBody = completeBody;
                             w(ret.route.handler);
                         })
-                    } else {
-                        w(ret.route.handler);
+                        return;
                     }
-                } else {
-                    Routes.handleError(404, req, res, url);
+                    w(ret.route.handler);
+                    return;
                 }
+                Routes.handleError(404, req, res, url);
+                return;
             } catch (e) {
                 console.error(e);
                 Routes.handleError(e, req, res, url);
+                return;
             }
         });
+        return;
     }
 }

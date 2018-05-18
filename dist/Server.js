@@ -5,6 +5,10 @@ var Router_1 = require("./Router");
 var BodyParser_1 = require("./BodyParser");
 var Wrapper_1 = require("./Wrapper");
 /**
+ * @hidden
+ */
+var sockets = {};
+/**
  * Handles Routes from Node.JS HTTPServer instance
  *
  * ### Example:
@@ -29,7 +33,7 @@ function Server() {
                     var w = Wrapper_1.createWrapper(req, res, url);
                     if (req.method == "POST" || req.method == "PUT") {
                         var bufs = [];
-                        req.on('data', function (data) { return bufs.push(data); });
+                        req.on('readable', function (data) { return bufs.push(data); });
                         req.on('end', function () {
                             var completeBody = Buffer.concat(bufs).toString();
                             var _a = BodyParser_1.default(req.headers["content-type"], completeBody), Files = _a.Files, Body = _a.Body;
@@ -38,20 +42,22 @@ function Server() {
                             w.rawBody = completeBody;
                             w(ret.route.handler);
                         });
+                        return;
                     }
-                    else {
-                        w(ret.route.handler);
-                    }
+                    w(ret.route.handler);
+                    return;
                 }
-                else {
-                    Router_1.Routes.handleError(404, req, res, url);
-                }
+                Router_1.Routes.handleError(404, req, res, url);
+                return;
             }
             catch (e) {
                 console.error(e);
                 Router_1.Routes.handleError(e, req, res, url);
+                return;
             }
         });
+        return;
     };
 }
 exports.default = Server;
+//# sourceMappingURL=Server.js.map

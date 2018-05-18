@@ -14,3 +14,4 @@ exports.App = App_1.default;
 __export(require("./Router"));
 __export(require("./Autoload"));
 __export(require("./Autoload"));
+//# sourceMappingURL=index.js.map

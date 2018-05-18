@@ -100,3 +100,4 @@ function BodyParser(type, body) {
     }
 }
 exports.default = BodyParser;
+//# sourceMappingURL=BodyParser.js.map

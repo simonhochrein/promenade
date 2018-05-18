@@ -1,7 +1,9 @@
+import { Wrapper } from "./utils";
+
 /**
  * @hidden
  */
-var seq = 0;
+var seq = -1;
 /**
  * @hidden
  */
@@ -31,7 +33,7 @@ export function trace() {
     for (var i = 1; i < lines.length; i++) {
         var name = lines[i].trim().split(" ")[1];
         if (~name.indexOf("__wrapper_")) {
-            return __wrappers[name.slice(10, name.length)];
+            return __wrappers[name.slice(10, name.length)] as Wrapper;
         }
     }
     throw new Error("Cannot call method outside of route");

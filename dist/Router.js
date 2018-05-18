@@ -320,6 +320,7 @@ var Routes = /** @class */ (function () {
                 handler.apply(null, params);
             }
             else {
+                Wrapper_1.remove();
                 cb();
             }
         }
@@ -354,3 +355,4 @@ var Routes = /** @class */ (function () {
     return Routes;
 }());
 exports.Routes = Routes;
+//# sourceMappingURL=Router.js.map
