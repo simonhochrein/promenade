@@ -1,6 +1,7 @@
+"use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var querystring = require("querystring");
-var utils_1 = require("./utils");
+var Wrapper_1 = require("./Wrapper");
 var Request = /** @class */ (function () {
     function Request() {
     }
@@ -16,7 +17,7 @@ var Request = /** @class */ (function () {
          * @memberof Request
          */
         get: function () {
-            return querystring.parse(utils_1.getParent().url.query);
+            return querystring.parse(Wrapper_1.trace().url.query);
         },
         enumerable: true,
         configurable: true
@@ -33,7 +34,7 @@ var Request = /** @class */ (function () {
          * @memberof Request
          */
         get: function () {
-            return utils_1.getParent().body || {};
+            return Wrapper_1.trace().body || {};
         },
         enumerable: true,
         configurable: true
@@ -50,7 +51,7 @@ var Request = /** @class */ (function () {
          * @memberof Request
          */
         get: function () {
-            return utils_1.getParent().files || [];
+            return Wrapper_1.trace().files || [];
         },
         enumerable: true,
         configurable: true
@@ -67,7 +68,7 @@ var Request = /** @class */ (function () {
          * @memberof Request
          */
         get: function () {
-            return utils_1.getParent().req.method;
+            return Wrapper_1.trace().req.method;
         },
         enumerable: true,
         configurable: true
@@ -84,7 +85,7 @@ var Request = /** @class */ (function () {
          * @memberof Request
          */
         get: function () {
-            return utils_1.getParent().url.pathname;
+            return Wrapper_1.trace().url.pathname;
         },
         enumerable: true,
         configurable: true
@@ -101,7 +102,7 @@ var Request = /** @class */ (function () {
          * @memberof Request
          */
         get: function () {
-            return utils_1.getParent().rawBody || "";
+            return Wrapper_1.trace().rawBody || "";
         },
         enumerable: true,
         configurable: true

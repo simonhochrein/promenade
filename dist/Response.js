@@ -1,7 +1,9 @@
+"use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var utils_1 = require("./utils");
+// import { getParent } from "./utils";
 var zlib = require("zlib");
 var App_1 = require("./App");
+var Wrapper_1 = require("./Wrapper");
 var Response = /** @class */ (function () {
     function Response() {
     }
@@ -18,7 +20,7 @@ var Response = /** @class */ (function () {
      * @memberof Response
      */
     Response.Send = function (value) {
-        var parent = utils_1.getParent();
+        var parent = Wrapper_1.trace();
         if (typeof value == "object") {
             if (App_1.default.get('gzip') == true) {
                 parent.res.setHeader("Content-Encoding", "gzip");
@@ -45,6 +47,7 @@ var Response = /** @class */ (function () {
                 parent.res.end();
             }
         }
+        Wrapper_1.remove();
     };
     /**
      * Sets response header
@@ -60,7 +63,7 @@ var Response = /** @class */ (function () {
      * @memberof Response
      */
     Response.Header = function (key, value) {
-        var parent = utils_1.getParent();
+        var parent = Wrapper_1.trace();
         if (parent) {
             parent.res.setHeader(key, value);
         }
@@ -81,7 +84,7 @@ var Response = /** @class */ (function () {
      * @memberof Response
      */
     Response.Status = function (status) {
-        utils_1.getParent().res.statusCode = status;
+        Wrapper_1.trace().res.statusCode = status;
     };
     /**
      * Throws HTTP error
@@ -111,7 +114,7 @@ var Response = /** @class */ (function () {
      * @memberof Response
      */
     Response.Next = function () {
-        utils_1.getParent().next();
+        Wrapper_1.trace().next();
     };
     return Response;
 }());

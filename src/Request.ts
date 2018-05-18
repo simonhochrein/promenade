@@ -1,6 +1,7 @@
 import * as querystring from 'querystring';
-import { getParent } from './utils';
+// import { getParent } from './utils';
 import { File } from './File';
+import { trace } from './Wrapper';
 
 export default class Request {
     /**
@@ -14,7 +15,7 @@ export default class Request {
      * @memberof Request
      */
     static get Query() {
-        return querystring.parse(getParent().url.query);
+        return querystring.parse(trace().url.query);
     }
 
     /**
@@ -28,7 +29,7 @@ export default class Request {
      * @memberof Request
      */
     static get Body(): { [name: string]: any } {
-        return getParent().body || {};
+        return trace().body || {};
     }
 
     /**
@@ -42,7 +43,7 @@ export default class Request {
      * @memberof Request
      */
     static get Files(): File[] {
-        return getParent().files || [];
+        return trace().files || [];
     }
     /**
      * Returns HTTP method of current route
@@ -55,7 +56,7 @@ export default class Request {
      * @memberof Request
      */
     static get Method(): any {
-        return getParent().req.method;
+        return trace().req.method;
     }
     /**
      * Returns URL of current route
@@ -68,7 +69,7 @@ export default class Request {
      * @memberof Request
      */
     static get Url(): string {
-        return getParent().url.pathname;
+        return trace().url.pathname;
     }
     /**
      * Returns raw body of current route
@@ -81,6 +82,6 @@ export default class Request {
      * @memberof Request
      */
     static get RawBody() {
-        return getParent().rawBody || "";
+        return trace().rawBody || "";
     }
 }

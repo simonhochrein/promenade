@@ -27,8 +27,7 @@ tsconfig.json
         "experimentalDecorators": true,
         "lib": [
             "es6"
-        ],
-        "noImplicitUseStrict": true
+        ]
     }
 }
 ```

@@ -1,6 +1,7 @@
-import { getParent } from "./utils";
+// import { getParent } from "./utils";
 import * as zlib from 'zlib';
 import App from "./App";
+import { trace, remove } from './Wrapper';
 
 export default class Response {
     /**
@@ -16,7 +17,7 @@ export default class Response {
      * @memberof Response
      */
     static Send(value: any) {
-        let parent = getParent();
+        let parent = trace();
         if (typeof value == "object") {
             if (App.get('gzip') == true) {
                 parent.res.setHeader("Content-Encoding", "gzip");
@@ -40,6 +41,7 @@ export default class Response {
                 parent.res.end();
             }
         }
+        remove();
     }
     /**
      * Sets response header
@@ -55,7 +57,7 @@ export default class Response {
      * @memberof Response
      */
     static Header(key: string, value: string) {
-        let parent = getParent();
+        let parent = trace();
         if (parent) {
             parent.res.setHeader(key, value);
         } else {
@@ -75,7 +77,7 @@ export default class Response {
      * @memberof Response
      */
     static Status(status: number) {
-        getParent().res.statusCode = status;
+        trace().res.statusCode = status;
     }
     /**
      * Throws HTTP error
@@ -105,6 +107,6 @@ export default class Response {
      * @memberof Response
      */
     static Next() {
-        getParent().next();
+        trace().next();
     }
 }

@@ -1,5 +1,7 @@
+"use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var BodyParser_1 = require("./BodyParser");
+var Wrapper_1 = require("./Wrapper");
 /**
  * @hidden
  */
@@ -231,13 +233,11 @@ var Routes = /** @class */ (function () {
             return false;
         });
         if (errorHandler) {
-            var w = function __wrapper() {
+            var w = Wrapper_1.createWrapper(req, res, url);
+            var fn = function () {
                 errorHandler.handler(error);
             };
-            w.res = res;
-            w.req = req;
-            w.url = url;
-            w();
+            w(fn);
         }
         else {
             res.statusCode = 500;
@@ -312,7 +312,8 @@ var Routes = /** @class */ (function () {
     Routes.runMiddleware = function (req, res, url, cb) {
         var params = [];
         var next = this.middleware(url);
-        var w = function __wrapper() {
+        var w = Wrapper_1.createWrapper(req, res, url);
+        function __middleware__wrapper() {
             var ret = next();
             if (ret) {
                 var params = ret[0], handler = ret[1].handler;
@@ -321,11 +322,9 @@ var Routes = /** @class */ (function () {
             else {
                 cb();
             }
-        };
-        w.res = res;
-        w.req = req;
-        w.url = url;
-        w.next = w;
+        }
+        ;
+        w.next = __middleware__wrapper;
         if (req.method == "POST" || req.method == "PUT") {
             var bufs = [];
             req.on('data', function (data) { return bufs.push(data); });
@@ -336,7 +335,7 @@ var Routes = /** @class */ (function () {
                 w.body = Body;
                 w.rawBody = completeBody;
                 try {
-                    w();
+                    w(__middleware__wrapper);
                 }
                 catch (e) {
                     Routes.handleError(e, req, res, url);
@@ -345,7 +344,7 @@ var Routes = /** @class */ (function () {
         }
         else {
             try {
-                w();
+                w(__middleware__wrapper);
             }
             catch (e) {
                 Routes.handleError(e, req, res, url);

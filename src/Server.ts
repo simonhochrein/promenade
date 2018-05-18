@@ -4,6 +4,7 @@ import * as querystring from 'querystring';
 import { ServerRequest, ServerResponse } from "http";
 import BodyParser from './BodyParser';
 import { Wrapper } from "./utils";
+import { createWrapper } from "./Wrapper";
 
 
 /**
@@ -28,12 +29,7 @@ export default function Server(): (req: ServerRequest, res: ServerResponse) => v
             try {
                 var ret = Routes.resolve(req, url);
                 if (ret.route) {
-                    var w: Wrapper = function __wrapper() {
-                        ret.route.handler.apply(null, ret.params);
-                    };
-                    w.res = res;
-                    w.req = req;
-                    w.url = url;
+                    var w = createWrapper(req, res, url);
                     if (req.method == "POST" || req.method == "PUT") {
                         var bufs = [];
                         req.on('data', data => bufs.push(data));
@@ -43,15 +39,16 @@ export default function Server(): (req: ServerRequest, res: ServerResponse) => v
                             w.files = Files;
                             w.body = Body;
                             w.rawBody = completeBody;
-                            w();
+                            w(ret.route.handler);
                         })
                     } else {
-                        w();
+                        w(ret.route.handler);
                     }
                 } else {
                     Routes.handleError(404, req, res, url);
                 }
             } catch (e) {
+                console.error(e);
                 Routes.handleError(e, req, res, url);
             }
         });

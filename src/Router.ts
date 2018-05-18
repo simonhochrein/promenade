@@ -2,6 +2,7 @@ import { ServerRequest, ServerResponse } from "http";
 import { inspect } from "util";
 import BodyParser from "./BodyParser";
 import { Wrapper } from "./utils";
+import { createWrapper } from "./Wrapper";
 /**
  * @hidden
  */
@@ -253,13 +254,11 @@ export class Routes {
             return false;
         });
         if (errorHandler) {
-            var w = function __wrapper() {
+            var w = createWrapper(req, res, url);
+            var fn = () => {
                 errorHandler.handler(error);
             };
-            (w as any).res = res;
-            (w as any).req = req;
-            (w as any).url = url;
-            w();
+            w(fn);
         } else {
             res.statusCode = 500;
             res.write(`${error}`);
@@ -329,7 +328,8 @@ export class Routes {
     static runMiddleware(req: ServerRequest, res: ServerResponse, url, cb) {
         var params = [];
         var next = this.middleware(url);
-        var w: Wrapper = function __wrapper() {
+        var w = createWrapper(req, res, url);
+        function __middleware__wrapper() {
             var ret = next();
             if (ret) {
                 var [params, { handler }] = ret;
@@ -338,10 +338,7 @@ export class Routes {
                 cb();
             }
         };
-        w.res = res;
-        w.req = req;
-        w.url = url;
-        w.next = w;
+        w.next = __middleware__wrapper;
         if (req.method == "POST" || req.method == "PUT") {
             var bufs = [];
             req.on('data', data => bufs.push(data));
@@ -352,14 +349,14 @@ export class Routes {
                 w.body = Body;
                 w.rawBody = completeBody;
                 try {
-                    w();
+                    w(__middleware__wrapper);
                 } catch (e) {
                     Routes.handleError(e, req, res, url);
                 }
             })
         } else {
             try {
-                w();
+                w(__middleware__wrapper);
             } catch (e) {
                 Routes.handleError(e, req, res, url);
             }

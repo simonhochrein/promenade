@@ -6,8 +6,7 @@
         "experimentalDecorators": true,
         "lib": [
             "es6"
-        ],
-        "noImplicitUseStrict": true
+        ]
     },
     "include": [
         "src/*.ts"
